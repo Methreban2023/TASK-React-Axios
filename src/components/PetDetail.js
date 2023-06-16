@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 // import petsData from "../petsData";
 import { useParams } from "react-router-dom";
 import { getPet, updatePet, deletePet } from "../api/pets";
+
+import { QueryClient, useMutation } from "@tanstack/react-query";
 const PetDetail = () => {
   const [pet, setPet] = useState({});
   const { petId } = useParams();
@@ -14,14 +16,21 @@ const PetDetail = () => {
   // if (!getPets) {
   //   return <h1>{`There is no pet with the id: ${petId}`}</h1>;
   // }
+
   function refreshHandler() {
     window.location.reload(false);
   }
+  const mutation = useMutation({
+    mutationFn: () => deletePet(petId),
+    onSuccess: () => {
+      QueryClient.invalidateQueries({ queryKey: ["getAllPets"] });
+    },
+  });
   const adoptHandler = () => {
     updatePet(petId, pet.name, pet.type, pet.image, pet.adopted);
   };
   const deleteHandler = () => {
-    deletePet(petId);
+    mutation.mutate();
   };
 
   useEffect(() => {

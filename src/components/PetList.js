@@ -1,30 +1,40 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import petsData from "../petsData";
 import PetItem from "./PetItem";
 import Modal from "./Modal";
 
 import { getAllPets } from "../api/pets";
-// import { useMutation, QueryClient, useQuery } from "@tanstack/react-query";
+
+import { QueryClient, useQuery } from "@tanstack/react-query";
 
 const PetList = () => {
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [pets, setPets] = useState([]);
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["getAllPets"],
+    queryFn: () => getAllPets(),
+  });
+  console.log(`is there an error? ${isError}`);
+  console.log(`the error is: ${error}`);
 
   function refreshHandler() {
     window.location.reload(false);
   }
-  const petList = pets
-    .filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
+
+  const petList = data
+    ?.filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
     .map((pet) => <PetItem pet={pet} key={pet.id} />);
 
-  const getData = async () => {
-    const res = await getAllPets();
-    setPets(res);
-  };
-  useEffect(() => {
-    getData();
-  }, []);
+  if (isLoading) return <h1>Loading...</h1>;
+
+  // const getData = async () => {
+  //   const res = await getAllPets();
+  //   setPets(res);
+  // };
+  // useEffect(() => {
+  //   getData();
+  // }, []);
   //
   //
 

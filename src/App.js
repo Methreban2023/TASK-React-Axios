@@ -2,7 +2,7 @@ import Home from "./components/Home";
 import Modal from "./components/Modal";
 import Navbar from "./components/Navbar";
 import PetDetail from "./components/PetDetail";
-import PetItem from "./components/PetItem";
+// import PetItem from "./components/PetItem";
 import PetList from "./components/PetList";
 import { Route, Routes } from "react-router-dom";
 function App() {
